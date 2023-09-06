@@ -28,6 +28,11 @@ public class AccountController {
         );
     }
 
+    /**
+     * 계좌 해지 컨트롤러
+     * @param request
+     * @return 사용자 아이디, 계좌 번호, 계좌 해지일시
+     */
     @DeleteMapping("/account")
     public DeleteAccount.Response deleteAccount(@RequestBody @Valid DeleteAccount.Request request) {
         return DeleteAccount.Response.from(

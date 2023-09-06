@@ -33,7 +33,7 @@ public class AccountService {
      * 실패 조건이 없을 경우 계좌 번호를 10자리 랜덤한 정수로 만들고 기본적으로 계좌 번호는 순차 증가 방식으로 생성 됨
      * 단 만들어진 계좌 번호가 10자리가 넘어가는 경우
      * 다시 랜덤한 10자리의 정수로 이루어진 계좌를 만들고 그 계좌부터 다시 번호가 순차 증가 방식으로 생성 됨
-     * 만들어진 계좌 정보를 리턴함
+     * 만들어진 계좌 정보를 저장
      */
     @Transactional
     public AccountDto createAccount(Long userId, Long initialBalance) {
@@ -81,7 +81,15 @@ public class AccountService {
         }
     }
 
-
+    /**
+     * 계좌 해지 서비스
+     * @param userId
+     * @param accountNumber
+     * @return
+     * 사용자가 없는 경우, 사용자 아이디와 계좌 소유주가 다른 경우,
+     * 계좌가 이미 해지 상태인 경우, 잔액이 있는 경우 실패 응답
+     * 해지한 계좌 정보를 저장
+     */
     @Transactional
     public AccountDto deleteAccount(Long userId, String accountNumber) {
         AccountUser accountUser = accountUserRepository.findById(userId)
