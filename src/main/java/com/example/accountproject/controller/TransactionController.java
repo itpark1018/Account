@@ -1,14 +1,13 @@
 package com.example.accountproject.controller;
 
 import com.example.accountproject.dto.CancelBalance;
+import com.example.accountproject.dto.TransactionInfo;
 import com.example.accountproject.dto.UseBalance;
 import com.example.accountproject.exception.AccountException;
 import com.example.accountproject.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -35,6 +34,11 @@ public class TransactionController {
         }
     }
 
+    /**
+     * 잔액 사용 취소 컨트롤러
+     * @param request
+     * @return 계좌번호, 거래결과, 거래아이디, 거래금액, 거래일시
+     */
     @PostMapping("/transaction/cancel")
     public CancelBalance.Response cancelBalance(@RequestBody @Valid CancelBalance.Request request) {
         try {
@@ -45,5 +49,16 @@ public class TransactionController {
 
             throw e;
         }
+    }
+
+    /**
+     * 거래 확인 서비스
+     * @param transactionId
+     * @return 거래 정보
+     */
+    @GetMapping("/transaction/{transactionId}")
+    public TransactionInfo getTransactionInfo(@PathVariable String transactionId) {
+        return TransactionInfo.from(transactionService.getTransactionInfo(transactionId));
+
     }
 }

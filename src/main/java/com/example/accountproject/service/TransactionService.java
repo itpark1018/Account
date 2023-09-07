@@ -168,4 +168,19 @@ public class TransactionService {
                 .build()
         );
     }
+
+    /**
+     * 거래 확인 서비스
+     * @param transactionId
+     * @return
+     * 해당 거래아이디가 없는 경우 실패 응답
+     * 계좌번호, 거래종류(잔액 사용, 잔액 사용 취소), transaction_result, transaction_id, 거래금액, 거래일시
+     * 성공거래 뿐 아니라 실패한 거래도 거래 확인할 수 있도록 합니다.
+     */
+    public TransactionDto getTransactionInfo(String transactionId) {
+        Transaction transaction = transactionRepository.findByTransactionId(transactionId)
+                .orElseThrow(() -> new AccountException(TRANSACTION_NOT_FOUND));
+
+        return TransactionDto.fromEntity(transaction);
+    }
 }
