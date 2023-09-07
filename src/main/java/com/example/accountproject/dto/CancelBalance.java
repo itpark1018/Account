@@ -1,5 +1,6 @@
 package com.example.accountproject.dto;
 
+import com.example.accountproject.aop.AccountLockIdInterface;
 import com.example.accountproject.type.TransactionResultType;
 import lombok.*;
 
@@ -11,7 +12,7 @@ public class CancelBalance {
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class Request {
+    public static class Request implements AccountLockIdInterface {
         @NotBlank
         private String transactionId;
 

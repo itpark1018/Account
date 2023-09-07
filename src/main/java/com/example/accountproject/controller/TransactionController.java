@@ -1,5 +1,6 @@
 package com.example.accountproject.controller;
 
+import com.example.accountproject.aop.AccountLock;
 import com.example.accountproject.dto.CancelBalance;
 import com.example.accountproject.dto.TransactionInfo;
 import com.example.accountproject.dto.UseBalance;
@@ -23,6 +24,7 @@ public class TransactionController {
      * @return 계좌번호, 거래결과, 거래아이디, 거래금액, 거래일시
      */
     @PostMapping("/transaction/use")
+    @AccountLock
     public UseBalance.Response useBalance(@RequestBody @Valid UseBalance.Request request) {
         try {
             return UseBalance.Response.from(transactionService.useBalance(request.getUserId(), request.getAccountNumber(), request.getAmount()));
@@ -40,6 +42,7 @@ public class TransactionController {
      * @return 계좌번호, 거래결과, 거래아이디, 거래금액, 거래일시
      */
     @PostMapping("/transaction/cancel")
+    @AccountLock
     public CancelBalance.Response cancelBalance(@RequestBody @Valid CancelBalance.Request request) {
         try {
             return CancelBalance.Response.from(transactionService.cancelBalance(request.getTransactionId(), request.getAccountNumber(), request.getAmount()));
