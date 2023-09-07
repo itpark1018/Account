@@ -1,15 +1,15 @@
 package com.example.accountproject.controller;
 
+import com.example.accountproject.dto.AccountInfo;
 import com.example.accountproject.dto.CreateAccount;
 import com.example.accountproject.dto.DeleteAccount;
 import com.example.accountproject.service.AccountService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,6 +38,21 @@ public class AccountController {
         return DeleteAccount.Response.from(
                 accountService.deleteAccount(request.getUserId(), request.getAccountNumber())
         );
+    }
+
+    /**
+     * 계좌 확인 컨트롤러
+     * @param userId
+     * @return 정보(계좌번호, 잔액)를 Json List 형식으로 응답
+     */
+    @GetMapping("/account")
+    public List<AccountInfo> getAccountsInfo(@RequestParam("user_id") Long userId) {
+        return accountService.getAccountsInfo(userId).stream()
+                .map(accountDto -> AccountInfo.builder()
+                        .accountNumber(accountDto.getAccountNumber())
+                        .balance(accountDto.getBalance())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 }

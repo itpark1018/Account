@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static com.example.accountproject.type.ErrorCode.*;
 
@@ -118,5 +120,23 @@ public class AccountService {
         if (account.getBalance() > 0) {
             throw new AccountException(BALANCE_NOT_EMPTY);
         }
+    }
+
+    /**
+     * 계좌 확인 서비스
+     * @param userId
+     * @return
+     * 사용자가 없는 경우 실패 응답
+     * 사용자가 있는 경우 계좌번호, 잔액을 Josn List로 응답
+     */
+    public List<AccountDto> getAccountsInfo(Long userId) {
+        AccountUser accountUser = accountUserRepository.findById(userId)
+                .orElseThrow(() -> new AccountException(USER_NOT_FOUND));
+
+        List<Account> accounts = accountRepository.findByAccountUser(accountUser);
+
+        return accounts.stream()
+                .map(AccountDto::fromEntity)
+                .collect(Collectors.toList());
     }
 }
